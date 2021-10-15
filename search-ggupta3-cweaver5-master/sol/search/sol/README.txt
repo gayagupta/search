@@ -1,0 +1,35 @@
+READ ME
+
+1. First, in the Index class configurations, add the file path of your input wiki as the first argument. Then input the file names for the titles text file, docs text file and words text file names are the 2nd, 3rd, and 4th arguments, respectively. Then run the main method of Index. Once our indexer has run (which may take some time depending on which wiki is being used), you must specify whether you want to use pageRank as the first argument, the text file for titles as the second argument, the docs text file as the third argument, and the words txt files as the final argument. input the corresponding text files in query. The user can then type any query, which is a non-case-sensitive list of words representing what they want to search, and find the top 10 (or less, depending on how many pages contain their query) results of their query. If their query returns a message saying "Query did not yield any results," we reccommend they try again with a less specific set of words.
+
+2. Our design primarily utilized hashmaps that efficiently stored helpful infromation. 
+
+To start, we will describe our indexer. To optimize on time and space efficiency, we only called the REGEX, stopWords, and stemmer objects once at the very beginning of our parser. We then created a nodeSeq representing each page, which we then converted into an array of pages. Once we processed each page, we set the page's Array index to null to further optimize on space. 
+
+We process each page, represented briefly by a list of strings (including the title), in "pageIterator." For each word in this list, we check if it is a link (denoted by double brackets), and parse/clean it accordingly and add it to a "links" hashMap that maps the page's ID to a set of all the links found in that page. If it is not a link, we run "insertWord," which takes a word and cleans it. First, it checks if the word is a stop word. If it is, we simply pass through it and go on to the next string. If it isn't, stem the word and we either add the stemmed word to a hashamp of strings mapping to a hashmaps ids and the string's frequency in a page, known as wordFreq, OR increment the existing frequency of the word by 1. We also update a hashmap, called maxWordCount, mapping an id to the maximum word count in a page accordingly by checking if the updated frequency is greater than the existing maxWordCount value. We continue this process for each word in a page, and each page in a wiki.
+
+In page rank, we first remove all the links in our "links" hashMap that are not found in the corpus. We then iterate through the ids in the "links" hashMap and calculate the weight of this id and every other ID in "links," storing the weight value in a hashMap called "weights" which maps the outer ID (the id of the outer for loop) of the weight of the outer ID and the inner id (the inner for loop). However, we *only* calculate the weight if we find that this inner ID page links to the outer ID OR if it doesn't link to anything at all. If it doesn't link the innerID, we move on. In our page rank calculations, we go through this weight HashMap and add our pageRank values to another hashMap. If weights doesn't contain the id we are searching for, we simply calculate the pageRank using 0.15/n, n being the number of pages in the corpus. 
+
+On the querier side of things, we first remove all stopWords in the userQuery and remove all words not in the corpus. If all words in the query are not in the corpus, we return an error message. If not, we use the informaiton we stored in the Index to calcualte the term frequency and inverse document frequency using our hasmap(word -> (hashmap(id -> frequency)) and hashMap(id -> maxFrequency) structures. We calculate the relevnacy for each word in the query in every page that each of these words are found on. If we are prompted to use pageRank, we multiply our pageRank for a given ID to the ID's relevancy score. We store these scores in a hashMap that maps an ID to its relevancy score. Finally, we sort these scores and return the top 10 of them. 
+
+3. We did not fail to implement any features. 
+
+4. We do not have any known bugs, except perhaps in the case where our indexer's input is not an XML file (but we were not given any guidance on how to deal with that)
+
+5. For testing the indexer, we used the provided ‘Small-Wiki,’ ‘PageRankWiki,’ and our own wikis titled ‘IndexTest,’ ‘PageRankTestWiki1’ and ‘PageRankTestWiki2.’ Primarily, the tests included predicting specific values of the data that Index will produce (hashmap of titles, ids, links, max word counts, word frequencies and page ranks). For all of these data structures, we tested that the size is correct. For testing the titles, we looked through ‘SmallWiki’ for a few titles to test against and match. For testing the links, we used our own ‘IndexTest’ wiki which included links of all three form factors. Our wiki also included links to their own pages, links to other pages, pages without any links and links to outside of the corpus, cases that would affect PageRank. We then wrote out which links we expected to be in each page and ran tests against this. To test the max word counts for a given page, we employed a similar strategy as links by counting up the words in ‘IndexTest’ and using these values against our code. For testing our word frequencies, we did a similar strategy as links and max word counts, ensuring that we are counting the text in a link and title as part of the text.
+
+For PageRank, we created two wikis -- ‘PageRankTestWiki1’ and ‘PageRankTestWiki2’—which have links to one another in the same pattern as the two examples provided in the project handout. We then compare the calculated PageRank values to the output values. Additionally, we test that the sum of the ranks across an input corpus sum close to 1. 
+
+All of these tests can be found in the IndexTest.scala file.
+
+Additionally, we needed to test that our Index runs efficiently and does not run out of space. 
+We ran BigWiki, which did not run out of space and took less than 10 minutes to run. 
+
+For query, we tested that the query calculated scores correctly and ordered them based on these scores. We did this by calculating the scores of the ‘IndexTest’ wiki by hand for several queries: single words, multiple words, query with some words in and some not. We then printed these results and compared them to our calculated values. 
+
+Holistically, we checked that our query worked on ‘MedWiki’ by comparing the outputs of our querier to the provided demo. While the results were not a perfect match, often 90% of our top ten were in the top ten documents of the demo output. 
+
+For testing queries with PageRank, we used different possible formulas of PageRank and compared the output values for different queries to the provided demo and exercised common sense if the outputs looked correct. 
+
+
+6. We did not have any other groups we worked with. 

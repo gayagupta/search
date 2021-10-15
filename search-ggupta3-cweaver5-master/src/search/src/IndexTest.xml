@@ -1,0 +1,26 @@
+<xml>
+    <page>
+        <title>Cats</title>
+        <id>1</id>
+        <text>cats cats cats dogs [[Dogs]] [[Dog:Animals]] [[Lizards]] hello</text>
+    </page>
+    <page>
+        <title>Dogs</title>
+        <id>2</id>
+        <text>No links here but some text</text>
+    </page>
+    <page>
+        <title>Lizards</title>
+        <id>3</id>
+        <text> [[Lizards]] [[Cats]] Bearded Dragon [[Category:Obesity]] [[Reptiles]] [[Snakes|Cold-Blooded]]</text>
+    </page>
+    <page>
+        <title>Snakes</title>
+        <id>4</id>
+        <text></text></page>
+    <page>
+        <title>Chickens</title>
+        <id>5</id>
+        <text>dog dogs chicken chicken chickens chick cock [[Cats]]</text>
+    </page>
+</xml>
